@@ -48,25 +48,21 @@
 
 /* The whole bar */
 #waybar {
-    background: #323232;
-    color: white;
+    background: rgba(0,0,0,0);
+    color: #999999;
     font-family: Mononoki Nerd Font, monospace;
     font-size: 13px;
 }
 
 /* Each module */
-#battery,
-#clock,
-#cpu,
-#custom-keyboard-layout,
-#memory,
-#mode,
-#network,
-#pulseaudio,
-#temperature,
-#tray {
+#battery {
     padding-left: 10px;
     padding-right: 10px;
+}
+
+#clock {
+    padding-left: 10px;
+    padding-right: 20px;
 }
 
 
@@ -173,9 +169,14 @@
     font-weight: bold;
 }
 
+#workspaces {
+    background: rgba(0,0,0,0);
+    padding-left: 10px;
+    padding-bottom: 0px;
+}
+
 #workspaces button {
     border-top: 2px solid transparent;
-    padding-bottom: 2px;
     padding-left: 4px;
     padding-right: 4px;
     color: #888888;
