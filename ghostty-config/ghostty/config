@@ -1,0 +1,4 @@
+cursor-style = block
+keybind = global:unconsumed:ctrl+shift+r=reload_config
+font-family = "Mononoki Nerd Font"
+# window-decoration = false
