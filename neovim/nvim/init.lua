@@ -39,6 +39,7 @@ vim.opt.relativenumber = true
 vim.o.expandtab = true
 vim.o.shiftwidth = 3
 vim.o.tabstop = 3
+vim.o.textwidth = 150
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -73,7 +74,7 @@ vim.o.timeoutlen = 300
 vim.o.completeopt = 'menuone,noselect'
 
 -- NOTE: You should make sure your terminal supports this
-vim.o.termguicolors = false
+vim.o.termguicolors = true
 
 -- [[ Basic Keymaps ]]
 
@@ -256,6 +257,21 @@ wk.add {
 
 -- format on save
 vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
+
+vim.filetype.add({
+  extension = {
+    lgf = "sml"
+  }
+})
+
+-- In your Neovim configuration file (e.g., init.lua):
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "sml",                    -- Replace with your target file type
+  callback = function()
+    vim.bo.commentstring = "(* %s *)" -- Replace "# %s" with your desired comment format
+  end,
+})
+
 
 -- Setup neovim lua configuration
 require('neodev').setup()

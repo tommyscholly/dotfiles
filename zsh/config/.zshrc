@@ -1,4 +1,4 @@
-export PATH=$HOME/bin:/usr/local/bin:/$HOME/.local/bin:$PATH
+export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 
 export EDITOR=nvim
 export VISUAL="$EDITOR"
@@ -17,6 +17,7 @@ source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 zstyle ':omz:update' mode reminder  # just remind me to update when it's time
 
 eval "$(zoxide init zsh)"
+eval "$(ssh-agent)" > /dev/null
 
 alias cat="bat"
 alias vim="nvim"
