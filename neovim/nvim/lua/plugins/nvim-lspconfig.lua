@@ -23,6 +23,9 @@ return {
         if server == "millet" then
           config["root_dir"] = lspconfig.util.root_pattern("*.mlb")
         end
+        config["on_attach"] = function(client)
+          client.server_capabilities.semanticTokensProvider = nil
+        end
         lspconfig[server].setup(config)
       end
 

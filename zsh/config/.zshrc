@@ -2,6 +2,7 @@ export PATH=$HOME/bin:/usr/local/bin:$HOME/.local/bin:$PATH
 
 export EDITOR=nvim
 export VISUAL="$EDITOR"
+export TERM="xterm-256color"
 
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
