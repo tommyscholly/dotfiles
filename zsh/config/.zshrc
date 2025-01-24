@@ -27,3 +27,7 @@ alias vimconf="pushd ~/.config/nvim >/dev/null; nvim; popd >/dev/null"
 alias gs="git status"
 alias cd="z"
 alias open="xdg-open"
+alias fetch="fastfetch"
+
+# Turso
+export PATH="$PATH:/home/tom/.turso"
