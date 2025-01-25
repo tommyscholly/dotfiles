@@ -38,9 +38,9 @@ vim.o.hlsearch = false
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.o.expandtab = true
-vim.o.shiftwidth = 3
-vim.o.tabstop = 3
-vim.o.textwidth = 150
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
+vim.o.textwidth = 300
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
