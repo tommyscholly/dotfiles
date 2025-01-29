@@ -7,19 +7,6 @@ return {
     'tpope/vim-rhubarb',
 
     'tpope/vim-surround',
-    -- {
-    --     'andweeb/presence.nvim',
-    --     config = function()
-    --         require("presence").setup({})
-    --     end,
-    --     lazy = true
-    -- },
-    -- {
-    --     'vyfor/cord.nvim',
-    --     branch = 'client-server',
-    --     build = ':Cord fetch',
-    --     opts = {}, -- calls require('cord').setup()
-    -- },
 
     "lopi-py/luau-lsp.nvim",
     "ckipp01/stylua-nvim",
@@ -47,15 +34,6 @@ return {
     -- "gc" to comment visual regions/lines
     { 'numToStr/Comment.nvim', opts = {}, lazy = false },
 
-    -- { 'andweeb/presence.nvim', opts = {}, lazy = false },
-
-    -- {
-    --     'stevearc/oil.nvim',
-    --     opts = {},
-    --     -- Optional dependencies
-    --     dependencies = { "nvim-tree/nvim-web-devicons" },
-    -- },
-
 
     -- {
     --     "kawre/leetcode.nvim",
@@ -71,5 +49,16 @@ return {
     --     },
     -- },
 
-    'mfussenegger/nvim-dap'
+    'mfussenegger/nvim-dap',
+
+    {
+        "chentoast/marks.nvim",
+        event = "VeryLazy",
+        opts = {
+            -- mappings = {
+            -- next = "]m",
+            -- prev = "[m",
+            -- }
+        },
+    }
 }
