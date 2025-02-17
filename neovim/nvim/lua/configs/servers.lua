@@ -9,7 +9,6 @@ local servers = {
 			},
 		},
 	},
-	["luau_lsp"] = {},
 	-- ["rust_analyzer"] = {},
 	-- ["ocamllsp"] = {},
 	["clangd"] = {},
@@ -21,6 +20,7 @@ local servers = {
 	-- ["hls"] = {},
 	["tinymist"] = {},
 	["pylsp"] = {},
+	["ols"] = {},
 	-- ["omnisharp"] = {},
 }
 local servers_list = {}

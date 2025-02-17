@@ -40,7 +40,9 @@ vim.opt.relativenumber = true
 vim.o.expandtab = true
 vim.o.shiftwidth = 4
 vim.o.tabstop = 4
-vim.o.textwidth = 300
+vim.o.wrap = false
+vim.o.textwidth = 9999
+vim.o.wrapmargin = 9999
 
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "nvim_treesitter#foldexpr()"
@@ -56,6 +58,7 @@ vim.o.clipboard = 'unnamedplus'
 
 -- Enable break indent
 vim.o.breakindent = true
+vim.opt.indentexpr = ""
 
 -- Save undo history
 vim.o.undofile = true
@@ -197,7 +200,7 @@ vim.defer_fn(function()
         auto_install = false,
 
         highlight = { enable = true },
-        indent = { enable = true },
+        indent = { enable = false },
         incremental_selection = {
             enable = true,
             keymaps = {
@@ -264,7 +267,8 @@ vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 vim.filetype.add({
     extension = {
-        lgf = "sml"
+        lgf = "sml",
+        grm = "grm"
     }
 })
 
@@ -276,6 +280,9 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-
--- Setup neovim lua configuration
-require('neodev').setup()
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "grm",                      -- Replace with your target file type
+    callback = function()
+        vim.bo.commentstring = "(* %s *)" -- Replace "# %s" with your desired comment format
+    end,
+})

@@ -31,3 +31,6 @@ alias fetch="fastfetch"
 
 # Turso
 export PATH="$PATH:/home/tom/.turso"
+
+export PATH="$PATH:/home/tom/.local/bin/odin"
+export PATH="$PATH:/home/tom/.local/bin/smlnj/bin"

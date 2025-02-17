@@ -11,8 +11,6 @@ return {
       -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
       { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
 
-      -- Additional lua configuration, makes nvim stuff amazing!
-      'folke/neodev.nvim',
     },
     config = function()
       local lspconfig = require('lspconfig')
@@ -23,7 +21,7 @@ return {
         if server == "millet" then
           config["root_dir"] = lspconfig.util.root_pattern("*.mlb")
         end
-        config["on_attach"] = function(client)
+        config["on_attach"] = function(client, bufnr)
           client.server_capabilities.semanticTokensProvider = nil
         end
         lspconfig[server].setup(config)

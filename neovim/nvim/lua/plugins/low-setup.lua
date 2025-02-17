@@ -8,8 +8,12 @@ return {
 
     'tpope/vim-surround',
 
-    "lopi-py/luau-lsp.nvim",
     "ckipp01/stylua-nvim",
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {},
+    },
 
     -- Detect tabstop and shiftwidth automatically
     'tpope/vim-sleuth',
@@ -35,19 +39,19 @@ return {
     { 'numToStr/Comment.nvim', opts = {}, lazy = false },
 
 
-    -- {
-    --     "kawre/leetcode.nvim",
-    --     build = ":TSUpdate html", -- if you have `nvim-treesitter` installed
-    --     dependencies = {
-    --         "nvim-telescope/telescope.nvim",
-    --         -- "ibhagwan/fzf-lua",
-    --         "nvim-lua/plenary.nvim",
-    --         "MunifTanjim/nui.nvim",
-    --     },
-    --     opts = {
-    --         lang = "cpp",
-    --     },
-    -- },
+    {
+        "kawre/leetcode.nvim",
+        build = ":TSUpdate html", -- if you have `nvim-treesitter` installed
+        dependencies = {
+            "nvim-telescope/telescope.nvim",
+            -- "ibhagwan/fzf-lua",
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+        },
+        opts = {
+            lang = "rust",
+        },
+    },
 
     'mfussenegger/nvim-dap',
 
