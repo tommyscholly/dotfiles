@@ -14,6 +14,7 @@ return {
     },
     config = function()
       local lspconfig = require('lspconfig')
+      lspconfig.gleam.setup {}
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       for server, config in pairs(servers) do
         config["capabilities"] = capabilities
