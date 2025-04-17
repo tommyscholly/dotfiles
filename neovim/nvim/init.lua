@@ -6,7 +6,7 @@
 vim.opt.termguicolors = true
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
-vim.api.nvim_set_option("clipboard", "unnamed")
+-- vim.api.nvim_set_option("clipboard", "unnamed")
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    https://github.com/folke/lazy.nvim
