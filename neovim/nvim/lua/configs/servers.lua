@@ -11,7 +11,8 @@ local servers = {
 	},
 	-- ["rust_analyzer"] = {},
 	-- ["ocamllsp"] = {},
-	["clangd"] = {},
+	["clangd"] = {
+	},
 	["zls"] = {},
 	["millet"] = {
 		filetypes = { 'sml' },

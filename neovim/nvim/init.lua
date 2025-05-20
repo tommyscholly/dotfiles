@@ -102,6 +102,13 @@ vim.lsp.inlay_hint.enable(true)
 vim.keymap.set('n', '<leader>i', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
     { desc = "Toggle inlay hints" })
 
+--v0.11 now turns these off by default ;(
+vim.diagnostic.config({
+    virtual_lines = true,
+    -- virtual_text = true,
+
+})
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
