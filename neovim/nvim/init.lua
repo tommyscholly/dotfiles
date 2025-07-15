@@ -1,8 +1,3 @@
--- Set <space> as the leader key
--- See `:help mapleader`
---  NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
--- vim.lsp.set_log_level "debug"
--- NOTE: You should make sure your terminal supports this
 vim.opt.termguicolors = true
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
@@ -104,8 +99,8 @@ vim.keymap.set('n', '<leader>i', function() vim.lsp.inlay_hint.enable(not vim.ls
 
 --v0.11 now turns these off by default ;(
 vim.diagnostic.config({
-    virtual_lines = true,
-    -- virtual_text = true,
+    -- virtual_lines = true,
+    virtual_text = true,
 
 })
 

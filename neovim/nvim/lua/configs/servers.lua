@@ -9,20 +9,12 @@ local servers = {
 			},
 		},
 	},
-	-- ["rust_analyzer"] = {},
-	-- ["ocamllsp"] = {},
 	["clangd"] = {
 	},
 	["zls"] = {},
-	["millet"] = {
-		filetypes = { 'sml' },
-		single_file_support = true,
-	},
-	-- ["hls"] = {},
+	-- typst lsp
 	["tinymist"] = {},
 	["pylsp"] = {},
-	["ols"] = {},
-	-- ["omnisharp"] = {},
 }
 local servers_list = {}
 

@@ -13,20 +13,15 @@ return {
 
     },
     config = function()
-      local lspconfig = require('lspconfig')
-      lspconfig.gleam.setup {}
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      for server, config in pairs(servers) do
-        config["capabilities"] = capabilities
-        -- TODO: move this somewhere else
-        if server == "millet" then
-          config["root_dir"] = lspconfig.util.root_pattern("*.mlb")
-        end
-        config["on_attach"] = function(client, bufnr)
-          client.server_capabilities.semanticTokensProvider = nil
-        end
-        lspconfig[server].setup(config)
-      end
+      -- local lspconfig = require('lspconfig')
+      -- local capabilities = require('cmp_nvim_lsp').default_capabilities()
+      -- for server, config in pairs(servers) do
+      --   config["capabilities"] = capabilities
+      --   config["on_attach"] = function(client, _)
+      --     client.server_capabilities.semanticTokensProvider = nil
+      --   end
+      --   lspconfig[server].setup(config)
+      -- end
 
       local opts = { noremap = true, silent = true }
       vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
