@@ -103,6 +103,7 @@ map('n', '<leader>i', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hin
     { desc = "Toggle inlay hints" })
 
 map('n', '<leader>lf', vim.lsp.buf.format)
+-- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 vim.lsp.enable({
     "lua_ls",
@@ -111,8 +112,6 @@ vim.lsp.enable({
     -- "rust_analyzer",
     "pylsp",
 })
-
-vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
