@@ -7,6 +7,9 @@ vim.g.maplocalleader = " "
 vim.opt.expandtab = true
 vim.opt.wrap = false
 vim.opt.hlsearch = false
+vim.opt.textwidth = 0
+vim.opt.wrapmargin = 0
+vim.opt.formatoptions = ""
 -- vim.opt.cursorcolumn = false
 vim.opt.ignorecase = true
 vim.opt.smartindent = true
@@ -20,7 +23,6 @@ vim.opt.clipboard = 'unnamedplus'
 
 vim.pack.add({
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
-
     { src = "https://github.com/AlessandroYorba/Alduin" },
 
     { src = "https://github.com/nvim-lua/plenary.nvim" },
@@ -46,15 +48,24 @@ vim.pack.add({
 
     -- git nicities
     { src = "https://github.com/tpope/vim-fugitive" },
-    { src = "https://github.com/tpope/vim-rhubarb" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/nvim-lualine/lualine.nvim" },
 
     -- detect tab stop
     { src = "https://github.com/tpope/vim-sleuth" },
+
+    -- works with tinymist
+    { src = "https://github.com/chomosuke/typst-preview.nvim" },
+
+    -- switch between file pairs
+    { src = "https://github.com/rgroli/other.nvim" }
 })
 
 vim.cmd.colorscheme("alduin")
+
+vim.wo.foldmethod = 'expr'
+vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+vim.wo.foldlevel = 99
 
 require("mason").setup()
 require("lualine").setup({
@@ -66,6 +77,11 @@ require("lualine").setup({
     },
 })
 require("telescope").setup()
+require('nvim-treesitter').install( { 'rust', 'lua', 'ocaml', 'c', 'cpp', 'python' })
+vim.print(require('nvim-treesitter').get_installed())
+
+vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+
 require("nvim-autopairs").setup()
 require("gitsigns").setup({
     signs = {
@@ -80,7 +96,6 @@ require("rustaceanvim")
 
 local map = vim.keymap.set
 map('n', '<leader>o', ':update<CR> :source<CR>')
-
 map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugins' })
 
 map('n', '<leader>gf', require('telescope.builtin').git_files, { desc = 'Search [G]it [F]iles' })
@@ -88,7 +103,6 @@ map('n', '<leader>ff', require('telescope.builtin').find_files, { desc = '[F]ind
 map('n', '<leader>fh', require('telescope.builtin').help_tags, { desc = '[F]ind [H]elp' })
 map('n', '<leader>fw', require('telescope.builtin').grep_string, { desc = '[F]ind current [W]ord' })
 map('n', '<leader>fg', require('telescope.builtin').live_grep, { desc = '[F]ind by [G]rep' })
-map('n', '<leader>fG', ':LiveGrepGitRoot<cr>', { desc = '[F]ind by [G]rep on Git Root' })
 map('n', '<leader>fd', require('telescope.builtin').diagnostics, { desc = '[F]ind [D]iagnostics' })
 map('n', '<leader>fr', require('telescope.builtin').resume, { desc = '[F]ind [R]esume' })
 
@@ -171,9 +185,12 @@ cmp.setup {
 
 vim.filetype.add({
     extension = {
-        fun = "sml",
-        sig = "sml",
-        grm = "sml"
+        -- treesitter doesnt have a SML parser, just an ocaml one
+        -- the SML filetype breaks identation for some reason that I cannot figure out
+        sml = "ocaml",
+        fun = "ocaml",
+        sig = "ocaml",
+        grm = "ocaml"
     }
 })
 
@@ -190,3 +207,18 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.bo.commentstring = "(* %s *)"
     end,
 })
+
+require("other-nvim").setup({
+    mappings = {
+        -- sml
+        {
+            pattern = "(.*).fun$",
+            target = "%1.sig",
+        },
+        {
+            pattern = "(.*).sig$",
+            target = "%1.fun",
+        }
+    },
+})
+map("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true })
