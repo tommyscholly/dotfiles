@@ -27,6 +27,7 @@
     ],
     "modules-right": [
         "pulseaudio",
+        "custom/vpn",
         "network",
         // "memory",
         // "cpu",
@@ -38,10 +39,16 @@
         "clock#time"
     ],
 
-
     // -------------------------------------------------------------------------
     // Modules
     // -------------------------------------------------------------------------
+
+    "custom/vpn": {
+        "exec": "~/.local/bin/waybar-vpn",
+        "interval": 3,
+        "return-type": "json",
+        "tooltip": true
+    },
 
     "battery": {
         "interval": 10,

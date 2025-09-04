@@ -24,7 +24,6 @@ alias cat="bat"
 alias vim="nvim"
 alias ls="eza --git"
 alias vimconf="pushd ~/.config/nvim >/dev/null; nvim; popd >/dev/null"
-alias gs="git status"
 alias cd="z"
 alias open="xdg-open"
 alias fetch="fastfetch"
@@ -34,3 +33,5 @@ export PATH="$PATH:/home/tom/.turso"
 
 export PATH="$PATH:/home/tom/.local/bin/odin"
 export PATH="$PATH:/home/tom/.local/bin/smlnj/bin"
+export PATH="$PATH:/home/tom/.local/wine-proton-10.0-1-amd64/bin"
+export CCACHE_DISABLE=1

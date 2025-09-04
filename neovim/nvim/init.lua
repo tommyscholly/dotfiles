@@ -58,7 +58,9 @@ vim.pack.add({
     { src = "https://github.com/chomosuke/typst-preview.nvim" },
 
     -- switch between file pairs
-    { src = "https://github.com/rgroli/other.nvim" }
+    { src = "https://github.com/rgroli/other.nvim" },
+
+    { src = "https://github.com/jez/vim-better-sml" }
 })
 
 vim.cmd.colorscheme("alduin")
@@ -78,7 +80,6 @@ require("lualine").setup({
 })
 require("telescope").setup()
 require('nvim-treesitter').install( { 'rust', 'lua', 'ocaml', 'c', 'cpp', 'python' })
-vim.print(require('nvim-treesitter').get_installed())
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
@@ -183,16 +184,16 @@ cmp.setup {
 }
 
 
-vim.filetype.add({
-    extension = {
-        -- treesitter doesnt have a SML parser, just an ocaml one
-        -- the SML filetype breaks identation for some reason that I cannot figure out
-        sml = "ocaml",
-        fun = "ocaml",
-        sig = "ocaml",
-        grm = "ocaml"
-    }
-})
+-- vim.filetype.add({
+--     extension = {
+--         -- treesitter doesnt have a SML parser, just an ocaml one
+--         -- the SML filetype breaks identation for some reason that I cannot figure out
+--         sml = "ocaml",
+--         fun = "ocaml",
+--         sig = "ocaml",
+--         grm = "ocaml"
+--     }
+-- })
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "sml",
