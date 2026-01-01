@@ -256,10 +256,13 @@ vim.lsp.config('rust_analyzer', {
     root_markers = { 'Cargo.toml', 'rust-project.json' },
     settings = {
         ['rust-analyzer'] = {
-            cargo = {
+            cargo       = {
                 allFeatures = true,
             },
             checkOnSave = true,
+            check       = {
+                command = "clippy",
+            },
             diagnostics = {
                 disabled = { "inactive-code" }
             },
