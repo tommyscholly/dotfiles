@@ -45,8 +45,6 @@ local packages = {
     -- Adds LSP completion capabilities
     { src = 'https://github.com/hrsh7th/cmp-nvim-lsp' },
 
-    -- { src = "https://github.com/mrcjkb/rustaceanvim",             version = "v6.9.2" },
-
     { src = "https://github.com/windwp/nvim-autopairs" },
 
     -- git nicities
@@ -64,9 +62,6 @@ local packages = {
     { src = "https://github.com/rgroli/other.nvim" },
 
     { src = "https://github.com/supermaven-inc/supermaven-nvim" },
-
-    -- better sml dependency
-    -- { src = "https://github.com/dense-analysis/ale" }
 
     { src = "https://github.com/ggandor/leap.nvim" },
     -- leap dependency
@@ -118,32 +113,8 @@ require("lualine").setup({
 })
 require("telescope").setup()
 
-vim.filetype.add({
-    extension = {
-        sml = "sml",
-        fun = "sml",
-        sig = "sml",
-    }
-})
-vim.api.nvim_create_autocmd('User', {
-    pattern = 'TSUpdate',
-    callback = function()
-        require('nvim-treesitter.parsers').zimbu = {
-            install_info = {
-                path = '/home/tom/Documents/dev/tree-sitter-sml',
-                -- optional entries
-                location = 'parser',
-                generate = false,
-                generate_from_json = false,
-                -- queries = 'queries/neovim',         -- symlink queries from given directory
-            },
-        }
-    end
-})
+require('nvim-treesitter').install({ 'rust', 'lua', 'ocaml', 'c', 'cpp', 'python' })
 
-require('nvim-treesitter').install({ 'rust', 'lua', 'ocaml', 'c', 'cpp', 'python', 'sml' })
-
-vim.treesitter.language.register('sml', { 'sml', 'sig', 'fun' })
 require("supermaven-nvim").setup({})
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -182,19 +153,6 @@ map('n', '<leader>lt', function() vim.diagnostic.config({ virtual_text = true, v
 map('n', '<leader>ly', function() vim.diagnostic.config({ virtual_text = false, virtual_lines = true }) end)
 map('n', '<leader>li', ':checkhealth vim.lsp<CR>', { silent = true })
 
--- local virt_lines_ns = vim.api.nvim_create_namespace 'on_diagnostic_jump'
---
--- local function on_jump(diagnostic, bufnr)
---     if not diagnostic then return end
---
---     vim.diagnostic.show(
---         virt_lines_ns,
---         bufnr,
---         { diagnostic },
---         { virtual_lines = { current_line = true }, virtual_text = false }
---     )
--- end
-
 -- Create a custom namespace. This will aggregate signs from all other
 -- namespaces and only show the one with the highest severity on a
 -- given line
@@ -231,7 +189,12 @@ vim.diagnostic.config({
     -- { jump = { on_jump = on_jump } }
 })
 
-vim.lsp.inlay_hint.enable(true)
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(_)
+        vim.lsp.inlay_hint.enable(true)
+    end,
+})
+
 map('n', '<leader>i', function() vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled()) end,
     { desc = "Toggle inlay hints" })
 
@@ -289,6 +252,12 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     end,
     group = highlight_group,
     pattern = '*',
+})
+
+vim.filetype.add({
+    extension = {
+        nm = "odin"
+    }
 })
 
 
