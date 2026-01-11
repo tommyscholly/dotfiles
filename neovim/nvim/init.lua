@@ -1,7 +1,4 @@
--- vim.cmd([[set mouse=]])
 vim.cmd([[set noswapfile]])
-
--- require("lua.schemes.colorscheme").setup()
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -66,7 +63,9 @@ local packages = {
     { src = "https://github.com/ggandor/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
-    { src = "https://github.com/lopi-py/luau-lsp.nvim" }
+    { src = "https://github.com/lopi-py/luau-lsp.nvim" },
+
+    { src = "https://github.com/sindrets/diffview.nvim" }
 }
 
 vim.pack.add(packages)
@@ -136,6 +135,8 @@ map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugin
 
 local builtin = require("telescope.builtin")
 map('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
+map('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff' })
+map('n', '<leader>gc', ':DiffviewClose<CR>', { desc = '[G]it Diffview [C]lose' })
 map('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
 map('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
 map('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
