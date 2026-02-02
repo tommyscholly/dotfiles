@@ -26,7 +26,7 @@ alias ls="eza --git"
 alias vimconf="pushd ~/.config/nvim >/dev/null; nvim; popd >/dev/null"
 alias cd="z"
 alias open="xdg-open"
-alias fetch="fastfetch --cpu-temp"
+alias fetch="fastfetch"
 
 # Turso
 export PATH="$PATH:/home/tom/.turso"

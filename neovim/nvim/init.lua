@@ -109,6 +109,19 @@ require("lualine").setup({
         component_separators = '|',
         section_separators = '',
     },
+    sections = {
+        lualine_c = {
+            function()
+                local filepath = vim.fn.expand('%:p')
+                local filename = vim.fn.expand('%:t')
+                local parent = vim.fn.fnamemodify(filepath, ':h:t')
+                if parent == '' or parent == '.' then
+                    return filename
+                end
+                return parent .. '/' .. filename
+            end
+        }
+    }
 })
 require("telescope").setup()
 

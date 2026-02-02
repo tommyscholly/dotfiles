@@ -45,7 +45,7 @@
 
     "custom/vpn": {
         "exec": "~/.local/bin/waybar-vpn",
-        "interval": 3,
+        "interval": 10,
         "return-type": "json",
         "tooltip": true
     },
