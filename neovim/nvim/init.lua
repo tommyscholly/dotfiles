@@ -65,7 +65,9 @@ local packages = {
     { src = "https://github.com/tpope/vim-repeat" },
     { src = "https://github.com/lopi-py/luau-lsp.nvim" },
 
-    { src = "https://github.com/sindrets/diffview.nvim" }
+    { src = "https://github.com/sindrets/diffview.nvim" },
+
+    { src = "https://github.com/ThePrimeagen/99" },
 }
 
 vim.pack.add(packages)
@@ -396,3 +398,5 @@ map("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true })
 
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
+
+require("llms.99")()
