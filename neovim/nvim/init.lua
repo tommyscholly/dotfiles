@@ -66,7 +66,7 @@ local packages = {
     -- switch between file pairs
     { src = "https://github.com/rgroli/other.nvim" },
 
-    -- { src = "https://github.com/supermaven-inc/supermaven-nvim" },
+    { src = "https://github.com/supermaven-inc/supermaven-nvim" },
 
     { src = "https://github.com/ggandor/leap.nvim" },
     -- leap dependency
@@ -126,9 +126,10 @@ vim.defer_fn(function()
     require("gitsigns").setup({
         signs = { add = { text = '+' }, change = { text = '~' }, delete = { text = '_' } }
     })
+
+    require("supermaven-nvim").setup({})
 end, 50)
 
--- require("supermaven-nvim").setup({})
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
