@@ -1,9 +1,5 @@
 {
   "plugins": {
-    "99": {
-      "rev": "2c771814e1d95280ee99545de61b28dfa773c5fa",
-      "src": "https://github.com/ThePrimeagen/99"
-    },
     "Alduin": {
       "rev": "6575a0f167fef521c404681b96caebdb2b9cc4cd",
       "src": "https://github.com/AlessandroYorba/Alduin"
