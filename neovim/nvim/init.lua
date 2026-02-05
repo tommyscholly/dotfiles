@@ -19,7 +19,15 @@ vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.signcolumn = "yes"
 
-vim.opt.clipboard = 'unnamedplus'
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_node_provider = 0
+
+vim.defer_fn(function()
+    if vim.fn.has('clipboard') == 1 then
+        vim.opt.clipboard = 'unnamedplus'
+    end
+end, 100)
 
 local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
@@ -58,7 +66,7 @@ local packages = {
     -- switch between file pairs
     { src = "https://github.com/rgroli/other.nvim" },
 
-    { src = "https://github.com/supermaven-inc/supermaven-nvim" },
+    -- { src = "https://github.com/supermaven-inc/supermaven-nvim" },
 
     { src = "https://github.com/ggandor/leap.nvim" },
     -- leap dependency
@@ -67,34 +75,37 @@ local packages = {
 
     { src = "https://github.com/sindrets/diffview.nvim" },
 
-    { src = "https://github.com/ThePrimeagen/99" },
+    -- { src = "https://github.com/ThePrimeagen/99" },
 }
 
 vim.pack.add(packages)
 
-local installed = vim.pack.get()
+vim.api.nvim_create_user_command("PackCleanup", function()
+    local installed = vim.pack.get()
 
-local to_remove = {}
-for _, package in ipairs(installed) do
-    -- check if the package is in the list of packages
-    -- if not, then remove it
-    local should_remove = true
-    for _, p in ipairs(packages) do
-        if package.spec.src == p.src then
-            should_remove = false
+    local to_remove = {}
+    for _, package in ipairs(installed) do
+        -- check if the package is in the list of packages
+        -- if not, then remove it
+        local should_remove = true
+        for _, p in ipairs(packages) do
+            if package.spec.src == p.src then
+                should_remove = false
+            end
+        end
+
+        if should_remove then
+            table.insert(to_remove, package.spec.name)
         end
     end
 
-    if should_remove then
-        table.insert(to_remove, package.spec.name)
+    if #to_remove > 0 then
+        vim.pack.del(to_remove)
+        print("Removed packages: ")
+        vim.print(to_remove)
     end
-end
+end, { desc = "Clear unused packages" })
 
-if #to_remove > 0 then
-    vim.pack.del(to_remove)
-    print("Removed packages: ")
-    vim.print(to_remove)
-end
 
 
 vim.cmd.colorscheme("alduin")
@@ -103,67 +114,44 @@ vim.wo.foldmethod = 'expr'
 vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 vim.wo.foldlevel = 99
 
-require("mason").setup()
-require("lualine").setup({
-    options = {
-        icons_enabled = false,
-        theme = 'auto',
-        component_separators = '|',
-        section_separators = '',
-    },
-    sections = {
-        lualine_c = {
-            function()
-                local filepath = vim.fn.expand('%:p')
-                local filename = vim.fn.expand('%:t')
-                local parent = vim.fn.fnamemodify(filepath, ':h:t')
-                if parent == '' or parent == '.' then
-                    return filename
-                end
-                return parent .. '/' .. filename
-            end
-        }
-    }
-})
-require("telescope").setup()
+vim.defer_fn(function()
+    require("lualine").setup({
+        options = { icons_enabled = false, theme = 'auto', component_separators = '|', section_separators = '' },
+        sections = { lualine_c = { function() 
+            local f = vim.fn.expand('%:p')
+            return vim.fn.fnamemodify(f, ':h:t') .. '/' .. vim.fn.expand('%:t')
+        end } }
+    })
+    require("nvim-autopairs").setup()
+    require("gitsigns").setup({
+        signs = { add = { text = '+' }, change = { text = '~' }, delete = { text = '_' } }
+    })
+end, 50)
 
-require('nvim-treesitter').install({ 'rust', 'lua', 'ocaml', 'c', 'cpp', 'python' })
-
-require("supermaven-nvim").setup({})
+-- require("supermaven-nvim").setup({})
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-
-require("nvim-autopairs").setup()
-require("gitsigns").setup({
-    signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-    },
-})
 
 local map = vim.keymap.set
 map('n', '<leader>o', ':update<CR> :source<CR>')
 map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugins' })
 
-local builtin = require("telescope.builtin")
-map('n', '<leader>gf', builtin.git_files, { desc = 'Search [G]it [F]iles' })
 map('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff' })
 map('n', '<leader>gc', ':DiffviewClose<CR>', { desc = '[G]it Diffview [C]lose' })
-map('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
-map('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind [H]elp' })
-map('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind current [W]ord' })
-map('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind by [G]rep' })
-map('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
-map('n', '<leader>fr', builtin.resume, { desc = '[F]ind [R]esume' })
-map('n', '<leader>fi', builtin.lsp_implementations, { desc = "[F]ind [I]mplementations" })
-map('n', '<leader>fb', builtin.builtin, { desc = "[F]ind [B]uiltin" })
-map('n', '<leader>ft', builtin.lsp_type_definitions, { desc = "[F]ind [T]ype Definitions" })
 
-map('n', '<leader>ao', ':SupermavenStart<CR>')
-map('n', '<leader>ap', ':SupermavenStop<CR>')
+map('n', '<leader>gf', function() require("telescope.builtin").git_files () end, { desc = 'Search [G]it [F]iles' })
+map('n', '<leader>ff', function() require("telescope.builtin").find_files () end, { desc = '[F]ind [F]iles' })
+map('n', '<leader>fh', function() require("telescope.builtin").help_tags () end, { desc = '[F]ind [H]elp' })
+map('n', '<leader>fw', function() require("telescope.builtin").grep_string () end, { desc = '[F]ind current [W]ord' })
+map('n', '<leader>fg', function() require("telescope.builtin").live_grep () end, { desc = '[F]ind by [G]rep' })
+map('n', '<leader>fd', function() require("telescope.builtin").diagnostics () end, { desc = '[F]ind [D]iagnostics' })
+map('n', '<leader>fr', function() require("telescope.builtin").resume () end, { desc = '[F]ind [R]esume' })
+map('n', '<leader>fi', function() require("telescope.builtin").lsp_implementations () end, { desc = "[F]ind [I]mplementations" })
+map('n', '<leader>fb', function() require("telescope.builtin").builtin () end, { desc = "[F]ind [B]uiltin" })
+map('n', '<leader>ft', function() require("telescope.builtin").lsp_type_definitions () end, { desc = "[F]ind [T]ype Definitions" })
+
+-- map('n', '<leader>ao', ':SupermavenStart<CR>')
+-- map('n', '<leader>ap', ':SupermavenStop<CR>')
 
 map('n', '<leader>lt', function() vim.diagnostic.config({ virtual_text = true, virtual_lines = false }) end)
 map('n', '<leader>ly', function() vim.diagnostic.config({ virtual_text = false, virtual_lines = true }) end)
@@ -221,45 +209,49 @@ vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
-vim.lsp.enable({
-    "lua_ls",
-    "tinymist",
-    "clangd",
-    "basedpyright",
-    "rust_analyzer",
-})
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "rust", "lua", "python", "cpp", "c", "typst" },
+    once = true,
+    callback = function()
+        require("mason").setup()
+        
+        local cmp = require('cmp')
+        local cmp_select = { behavior = cmp.SelectBehavior.Select }
+        local cmp_mappings = cmp.mapping.preset.insert({
+            ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
+            ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
+            ['<C-l>'] = cmp.mapping.confirm({ select = true }),
+            ["<C-Space>"] = cmp.mapping.complete(),
+        })
 
-vim.lsp.config('rust_analyzer', {
-    cmd = { 'rust-analyzer' },
-    filetypes = { 'rust' },
-    root_markers = { 'Cargo.toml', 'rust-project.json' },
-    settings = {
-        ['rust-analyzer'] = {
-            cargo       = {
-                allFeatures = true,
+        cmp_mappings['<Tab>'] = nil
+        cmp_mappings['<S-Tab>'] = nil
+        cmp.setup {
+            mapping = cmp_mappings,
+            snippet = {
+                expand = function(args)
+                    require 'luasnip'.lsp_expand(args.body)
+                end
             },
-            checkOnSave = true,
-            check       = {
-                command = "clippy",
-            },
-            diagnostics = {
-                disabled = { "inactive-code" }
-            },
-        },
-    },
-})
 
-require("luau-lsp").setup {
-    -- platform = {
-    --     type = "roblox",
-    -- },
-    -- sourcemap = {
-    --     enabled = true,
-    --     autogenerate = true, -- automatic generation when the server is initialized
-    --     rojo_project_file = "default.project.json",
-    --     sourcemap_file = "sourcemap.json",
-    -- },
-}
+            sources = {
+                { name = 'nvim_lsp' },
+            },
+        }
+
+        -- Enable LSPs
+        local lsp = vim.lsp
+        lsp.enable({ "lua_ls", "tinymist", "clangd", "basedpyright", "rust_analyzer" })
+        
+        require("luau-lsp").setup({})
+        
+        -- Config specific LSPs
+        lsp.config('rust_analyzer', {
+            cmd = { 'rust-analyzer' },
+            settings = { ['rust-analyzer'] = { checkOnSave = true, check = { command = "clippy" } } }
+        })
+    end
+})
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -268,12 +260,6 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     end,
     group = highlight_group,
     pattern = '*',
-})
-
-vim.filetype.add({
-    extension = {
-        nm = "odin"
-    }
 })
 
 
@@ -298,105 +284,65 @@ map("n", "<leader>si", function() harpoon:list():select(6) end, { desc = "Harpoo
 map("n", "<leader>s[", function() harpoon:list():prev() end, { desc = "Harpoon Previous Buffer" })
 map("n", "<leader>s]", function() harpoon:list():next() end, { desc = "Harpoon Next Buffer" })
 
-local cmp = require('cmp')
-local cmp_select = { behavior = cmp.SelectBehavior.Select }
-local cmp_mappings = cmp.mapping.preset.insert({
-    ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
-    ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
-    ['<C-l>'] = cmp.mapping.confirm({ select = true }),
-    ["<C-Space>"] = cmp.mapping.complete(),
-})
-
-cmp_mappings['<Tab>'] = nil
-cmp_mappings['<S-Tab>'] = nil
-cmp.setup {
-    mapping = cmp_mappings,
-    snippet = {
-        expand = function(args)
-            require 'luasnip'.lsp_expand(args.body)
-        end
-    },
-
-    sources = {
-        { name = 'nvim_lsp' },
-    },
-}
-
-
-local gs = require('gitsigns')
-map('n', ']c', function() gs.next_hunk() end, { desc = 'Next Git Sign', silent = true })
-map('n', '[c', function() gs.prev_hunk() end, { desc = 'Previous Git Sign', silent = true })
-map('n', '<leader>hs', gs.stage_hunk)
-map('n', '<leader>hr', gs.reset_hunk)
+map('n', ']c', function() require('gitsigns').next_hunk() end, { desc = 'Next Git Sign', silent = true })
+map('n', '[c', function() require('gitsigns').prev_hunk() end, { desc = 'Previous Git Sign', silent = true })
+map('n', '<leader>hs', function() require('gitsigns').stage_hunk() end)
+map('n', '<leader>hr', function() require('gitsigns').reset_hunk() end)
 map('v', '<leader>hs', function()
-    gs.stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+    require('gitsigns').stage_hunk({ vim.fn.line('.'), vim.fn.line('v') })
 end)
 map('v', '<leader>hr', function()
-    gs.reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
+    require('gitsigns').reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
 end)
 
-
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "sml",
-    callback = function()
-        vim.bo.commentstring = "(* %s *)"
-    end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "grm",
-    callback = function()
-        vim.bo.commentstring = "(* %s *)"
-    end,
-})
-
-require("other-nvim").setup({
-    mappings = {
-        -- sml
-        {
-            pattern = "(.*).fun$",
-            target = "%1.sig",
-        },
-        {
-            pattern = "(.*).sig$",
-            target = "%1.fun",
-        },
-        -- C/C++ files
-        {
-            pattern = "(.*).c$",
-            target = "%1.h",
-        },
-        {
-            pattern = "(.*).cpp$",
-            target = "%1.h",
-        },
-        {
-            pattern = "(.*).cc$",
-            target = "%1.h",
-        },
-        {
-            pattern = "(.*).h$",
-            target = {
-                {
-                    target = "%1.c",
-                    context = "source"
-                },
-                {
-                    target = "%1.cpp",
-                    context = "source"
-                },
-                {
-                    target = "%1.cc",
-                    context = "source"
+map("n", "<leader>ll", function()
+    require("other-nvim").setup({
+        mappings = {
+            -- sml
+            {
+                pattern = "(.*).fun$",
+                target = "%1.sig",
+            },
+            {
+                pattern = "(.*).sig$",
+                target = "%1.fun",
+            },
+            -- C/C++ files
+            {
+                pattern = "(.*).c$",
+                target = "%1.h",
+            },
+            {
+                pattern = "(.*).cpp$",
+                target = "%1.h",
+            },
+            {
+                pattern = "(.*).cc$",
+                target = "%1.h",
+            },
+            {
+                pattern = "(.*).h$",
+                target = {
+                    {
+                        target = "%1.c",
+                        context = "source"
+                    },
+                    {
+                        target = "%1.cpp",
+                        context = "source"
+                    },
+                    {
+                        target = "%1.cc",
+                        context = "source"
+                    }
                 }
             }
-        }
-    },
-})
-map("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true })
+        },
+    })
+
+end, { noremap = true, silent = true })
 
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
 
-require("llms.99")()
+-- require("llms.99")()

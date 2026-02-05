@@ -1,8 +1,10 @@
-cursor-style = "block"
-# cursor-text = "#875F5F"
+cursor-style = block
+cursor-style-blink = false
+shell-integration-features = no-cursor
+shell-integration = detect
 
 keybind = global:unconsumed:ctrl+shift+r=reload_config
 font-family = "Mononoki Nerd Font"
 
 # need to figure out how to toggle this depending on if im in hyprland or not
-window-decoration = false
+# window-decoration = false
