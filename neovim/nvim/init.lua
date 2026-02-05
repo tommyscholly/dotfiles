@@ -60,15 +60,12 @@ local packages = {
     -- detect tab stop
     { src = "https://github.com/tpope/vim-sleuth" },
 
-    -- works with tinymist
-    { src = "https://github.com/chomosuke/typst-preview.nvim" },
-
     -- switch between file pairs
     { src = "https://github.com/rgroli/other.nvim" },
 
     { src = "https://github.com/supermaven-inc/supermaven-nvim" },
 
-    { src = "https://github.com/ggandor/leap.nvim" },
+    { src = "https://codeberg.org/andyg/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
     { src = "https://github.com/lopi-py/luau-lsp.nvim" },
@@ -117,10 +114,13 @@ vim.wo.foldlevel = 99
 vim.defer_fn(function()
     require("lualine").setup({
         options = { icons_enabled = false, theme = 'auto', component_separators = '|', section_separators = '' },
-        sections = { lualine_c = { function() 
-            local f = vim.fn.expand('%:p')
-            return vim.fn.fnamemodify(f, ':h:t') .. '/' .. vim.fn.expand('%:t')
-        end } }
+        sections = {
+            lualine_c = { function()
+                local f = vim.fn.expand('%:p')
+                return vim.fn.fnamemodify(f, ':h:h:t') ..
+                    '/' .. vim.fn.fnamemodify(f, ':h:t') .. '/' .. vim.fn.expand('%:t')
+            end }
+        }
     })
     require("nvim-autopairs").setup()
     require("gitsigns").setup({
@@ -140,16 +140,18 @@ map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugin
 map('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff' })
 map('n', '<leader>gc', ':DiffviewClose<CR>', { desc = '[G]it Diffview [C]lose' })
 
-map('n', '<leader>gf', function() require("telescope.builtin").git_files () end, { desc = 'Search [G]it [F]iles' })
-map('n', '<leader>ff', function() require("telescope.builtin").find_files () end, { desc = '[F]ind [F]iles' })
-map('n', '<leader>fh', function() require("telescope.builtin").help_tags () end, { desc = '[F]ind [H]elp' })
-map('n', '<leader>fw', function() require("telescope.builtin").grep_string () end, { desc = '[F]ind current [W]ord' })
-map('n', '<leader>fg', function() require("telescope.builtin").live_grep () end, { desc = '[F]ind by [G]rep' })
-map('n', '<leader>fd', function() require("telescope.builtin").diagnostics () end, { desc = '[F]ind [D]iagnostics' })
-map('n', '<leader>fr', function() require("telescope.builtin").resume () end, { desc = '[F]ind [R]esume' })
-map('n', '<leader>fi', function() require("telescope.builtin").lsp_implementations () end, { desc = "[F]ind [I]mplementations" })
-map('n', '<leader>fb', function() require("telescope.builtin").builtin () end, { desc = "[F]ind [B]uiltin" })
-map('n', '<leader>ft', function() require("telescope.builtin").lsp_type_definitions () end, { desc = "[F]ind [T]ype Definitions" })
+map('n', '<leader>gf', function() require("telescope.builtin").git_files() end, { desc = 'Search [G]it [F]iles' })
+map('n', '<leader>ff', function() require("telescope.builtin").find_files() end, { desc = '[F]ind [F]iles' })
+map('n', '<leader>fh', function() require("telescope.builtin").help_tags() end, { desc = '[F]ind [H]elp' })
+map('n', '<leader>fw', function() require("telescope.builtin").grep_string() end, { desc = '[F]ind current [W]ord' })
+map('n', '<leader>fg', function() require("telescope.builtin").live_grep() end, { desc = '[F]ind by [G]rep' })
+map('n', '<leader>fd', function() require("telescope.builtin").diagnostics() end, { desc = '[F]ind [D]iagnostics' })
+map('n', '<leader>fr', function() require("telescope.builtin").resume() end, { desc = '[F]ind [R]esume' })
+map('n', '<leader>fi', function() require("telescope.builtin").lsp_implementations() end,
+    { desc = "[F]ind [I]mplementations" })
+map('n', '<leader>fb', function() require("telescope.builtin").builtin() end, { desc = "[F]ind [B]uiltin" })
+map('n', '<leader>ft', function() require("telescope.builtin").lsp_type_definitions() end,
+    { desc = "[F]ind [T]ype Definitions" })
 
 -- map('n', '<leader>ao', ':SupermavenStart<CR>')
 -- map('n', '<leader>ap', ':SupermavenStop<CR>')
@@ -215,7 +217,7 @@ vim.api.nvim_create_autocmd("FileType", {
     once = true,
     callback = function()
         require("mason").setup()
-        
+
         local cmp = require('cmp')
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
         local cmp_mappings = cmp.mapping.preset.insert({
@@ -242,10 +244,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
         -- Enable LSPs
         local lsp = vim.lsp
-        lsp.enable({ "lua_ls", "tinymist", "clangd", "basedpyright", "rust_analyzer" })
-        
+        lsp.enable({ "lua_ls", "clangd", "basedpyright", "rust_analyzer" })
+
         require("luau-lsp").setup({})
-        
+
         -- Config specific LSPs
         lsp.config('rust_analyzer', {
             cmd = { 'rust-analyzer' },
@@ -308,7 +310,7 @@ map("n", "<leader>ll", function()
                 pattern = "(.*).sig$",
                 target = "%1.fun",
             },
-            -- C/C++ files
+            -- C/C++ files (same directory)
             {
                 pattern = "(.*).c$",
                 target = "%1.h",
@@ -324,23 +326,34 @@ map("n", "<leader>ll", function()
             {
                 pattern = "(.*).h$",
                 target = {
-                    {
-                        target = "%1.c",
-                        context = "source"
-                    },
-                    {
-                        target = "%1.cpp",
-                        context = "source"
-                    },
-                    {
-                        target = "%1.cc",
-                        context = "source"
-                    }
-                }
-            }
+                    { target = "%1.c",   context = "source" },
+                    { target = "%1.cpp", context = "source" },
+                    { target = "%1.cc",  context = "source" },
+                },
+            },
+            -- C/C++ files (src/ <-> include/Luau/)
+            {
+                pattern = "(.*)/src/(.*).cpp$",
+                target = "%1/include/Luau/%2.h",
+            },
+            {
+                pattern = "(.*)/src/(.*).c$",
+                target = "%1/include/Luau/%2.h",
+            },
+            {
+                pattern = "(.*)/src/(.*).cc$",
+                target = "%1/include/Luau/%2.h",
+            },
+            {
+                pattern = "(.*)/include/Luau/(.*).h$",
+                target = {
+                    { target = "%1/src/%2.c",   context = "source" },
+                    { target = "%1/src/%2.cpp", context = "source" },
+                    { target = "%1/src/%2.cc",  context = "source" },
+                },
+            },
         },
     })
-
 end, { noremap = true, silent = true })
 
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
