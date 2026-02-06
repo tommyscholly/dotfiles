@@ -23,15 +23,16 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
-vim.defer_fn(function()
-    if vim.fn.has('clipboard') == 1 then
-        vim.opt.clipboard = 'unnamedplus'
-    end
-end, 100)
+vim.opt.clipboard = 'unnamedplus'
 
 local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
     { src = "https://github.com/AlessandroYorba/Alduin" },
+
+    { src = "https://github.com/zenbones-theme/zenbones.nvim"},
+
+    -- zenbones dep
+    { src = "https://github.com/rktjmp/lush.nvim"},
 
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/nvim-tree/nvim-web-devicons" },
