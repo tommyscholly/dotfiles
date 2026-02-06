@@ -22,7 +22,7 @@ eval "$(ssh-agent)" > /dev/null
 
 alias cat="bat"
 alias vim="nvim"
-alias ls="eza --git"
+alias ls="eza"
 alias vimconf="pushd ~/.config/nvim >/dev/null; nvim; popd >/dev/null"
 alias cd="z"
 alias open="xdg-open"
