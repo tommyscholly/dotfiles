@@ -63,8 +63,6 @@ local packages = {
     -- switch between file pairs
     { src = "https://github.com/rgroli/other.nvim" },
 
-    { src = "https://github.com/supermaven-inc/supermaven-nvim" },
-
     { src = "https://codeberg.org/andyg/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
@@ -126,8 +124,6 @@ vim.defer_fn(function()
     require("gitsigns").setup({
         signs = { add = { text = '+' }, change = { text = '~' }, delete = { text = '_' } }
     })
-
-    require("supermaven-nvim").setup({})
 end, 50)
 
 
