@@ -33,6 +33,11 @@ local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
     { src = "https://github.com/AlessandroYorba/Alduin" },
 
+    { src = "https://github.com/zenbones-theme/zenbones.nvim" },
+
+    -- zenbones dep
+    { src = "https://github.com/rktjmp/lush.nvim" },
+
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/nvim-tree/nvim-web-devicons" },
     { src = "https://github.com/nvim-telescope/telescope.nvim" },
@@ -56,6 +61,7 @@ local packages = {
     { src = "https://github.com/tpope/vim-fugitive" },
     { src = "https://github.com/lewis6991/gitsigns.nvim" },
     { src = "https://github.com/nvim-lualine/lualine.nvim" },
+    { src = "https://github.com/f-person/git-blame.nvim" },
 
     -- detect tab stop
     { src = "https://github.com/tpope/vim-sleuth" },
@@ -66,7 +72,7 @@ local packages = {
     { src = "https://codeberg.org/andyg/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
-    { src = "https://github.com/lopi-py/luau-lsp.nvim" },
+    -- { src = "https://github.com/lopi-py/luau-lsp.nvim" },
 
     { src = "https://github.com/sindrets/diffview.nvim" },
 
@@ -103,7 +109,7 @@ end, { desc = "Clear unused packages" })
 
 
 
-vim.cmd.colorscheme("alduin")
+vim.cmd.colorscheme("Alduin")
 
 vim.wo.foldmethod = 'expr'
 vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -124,6 +130,8 @@ vim.defer_fn(function()
     require("gitsigns").setup({
         signs = { add = { text = '+' }, change = { text = '~' }, delete = { text = '_' } }
     })
+
+    require("gitblame").setup({})
 end, 50)
 
 
@@ -209,7 +217,7 @@ vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "rust", "lua", "python", "cpp", "c", "typst" },
+    pattern = { "rust", "lua", "luau", "python", "cpp", "c", "typst" },
     once = true,
     callback = function()
         require("mason").setup()
@@ -240,9 +248,9 @@ vim.api.nvim_create_autocmd("FileType", {
 
         -- Enable LSPs
         local lsp = vim.lsp
-        lsp.enable({ "lua_ls", "clangd", "basedpyright", "rust_analyzer" })
+        lsp.enable({ "lua_ls", "clangd", "pyright", "rust_analyzer" })
 
-        require("luau-lsp").setup({})
+        -- require("luau-lsp").setup({})
 
         -- Config specific LSPs
         lsp.config('rust_analyzer', {
@@ -294,63 +302,62 @@ map('v', '<leader>hr', function()
     require('gitsigns').reset_hunk({ vim.fn.line('.'), vim.fn.line('v') })
 end)
 
-map("n", "<leader>ll", function()
-    require("other-nvim").setup({
-        mappings = {
-            -- sml
-            {
-                pattern = "(.*).fun$",
-                target = "%1.sig",
-            },
-            {
-                pattern = "(.*).sig$",
-                target = "%1.fun",
-            },
-            -- C/C++ files (same directory)
-            {
-                pattern = "(.*).c$",
-                target = "%1.h",
-            },
-            {
-                pattern = "(.*).cpp$",
-                target = "%1.h",
-            },
-            {
-                pattern = "(.*).cc$",
-                target = "%1.h",
-            },
-            {
-                pattern = "(.*).h$",
-                target = {
-                    { target = "%1.c",   context = "source" },
-                    { target = "%1.cpp", context = "source" },
-                    { target = "%1.cc",  context = "source" },
-                },
-            },
-            -- C/C++ files (src/ <-> include/Luau/)
-            {
-                pattern = "(.*)/src/(.*).cpp$",
-                target = "%1/include/Luau/%2.h",
-            },
-            {
-                pattern = "(.*)/src/(.*).c$",
-                target = "%1/include/Luau/%2.h",
-            },
-            {
-                pattern = "(.*)/src/(.*).cc$",
-                target = "%1/include/Luau/%2.h",
-            },
-            {
-                pattern = "(.*)/include/Luau/(.*).h$",
-                target = {
-                    { target = "%1/src/%2.c",   context = "source" },
-                    { target = "%1/src/%2.cpp", context = "source" },
-                    { target = "%1/src/%2.cc",  context = "source" },
-                },
+require("other-nvim").setup({
+    mappings = {
+        -- sml
+        {
+            pattern = "(.*).fun$",
+            target = "%1.sig",
+        },
+        {
+            pattern = "(.*).sig$",
+            target = "%1.fun",
+        },
+        -- C/C++ files (same directory)
+        {
+            pattern = "(.*).c$",
+            target = "%1.h",
+        },
+        {
+            pattern = "(.*).cpp$",
+            target = "%1.h",
+        },
+        {
+            pattern = "(.*).cc$",
+            target = "%1.h",
+        },
+        {
+            pattern = "(.*).h$",
+            target = {
+                { target = "%1.c",   context = "source" },
+                { target = "%1.cpp", context = "source" },
+                { target = "%1.cc",  context = "source" },
             },
         },
-    })
-end, { noremap = true, silent = true })
+        -- C/C++ files (src/ <-> include/Luau/)
+        {
+            pattern = "(.*)/src/(.*).cpp$",
+            target = "%1/include/Luau/%2.h",
+        },
+        {
+            pattern = "(.*)/src/(.*).c$",
+            target = "%1/include/Luau/%2.h",
+        },
+        {
+            pattern = "(.*)/src/(.*).cc$",
+            target = "%1/include/Luau/%2.h",
+        },
+        {
+            pattern = "(.*)/include/Luau/(.*).h$",
+            target = {
+                { target = "%1/src/%2.c",   context = "source" },
+                { target = "%1/src/%2.cpp", context = "source" },
+                { target = "%1/src/%2.cc",  context = "source" },
+            },
+        },
+    },
+})
+map("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true })
 
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
