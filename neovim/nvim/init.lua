@@ -30,7 +30,7 @@ vim.defer_fn(function()
 end, 100)
 
 local packages = {
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter",         version = "main" },
     { src = "https://github.com/AlessandroYorba/Alduin" },
 
     { src = "https://github.com/zenbones-theme/zenbones.nvim" },
@@ -41,8 +41,11 @@ local packages = {
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/nvim-tree/nvim-web-devicons" },
     { src = "https://github.com/nvim-telescope/telescope.nvim" },
+    { src = "https://github.com/nvim-telescope/telescope-fzf-native.nvim" },
 
-    { src = "https://github.com/ThePrimeagen/harpoon",            version = "harpoon2" },
+    { src = "https://github.com/nvim-mini/mini.pick" },
+
+    { src = "https://github.com/ThePrimeagen/harpoon",                    version = "harpoon2" },
 
     { src = 'https://github.com/neovim/nvim-lspconfig' },
     { src = "https://github.com/mason-org/mason.nvim" },
@@ -72,12 +75,26 @@ local packages = {
     { src = "https://codeberg.org/andyg/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
-    -- { src = "https://github.com/lopi-py/luau-lsp.nvim" },
+    { src = "https://github.com/lopi-py/luau-lsp.nvim" },
 
     { src = "https://github.com/sindrets/diffview.nvim" },
 
+    { src = "https://github.com/chentoast/marks.nvim" },
+
     -- { src = "https://github.com/ThePrimeagen/99" },
 }
+
+local hooks = function(ev)
+    -- Use available |event-data|
+    local name, kind = ev.data.spec.name, ev.data.kind
+    -- Run build script after plugin's code has changed
+    if name == 'telescope-fzf-native.nvim' and (kind == 'install' or kind == 'update') then
+        -- Append `:wait()` if you need synchronous execution
+        vim.system({ 'make' }, { cwd = ev.data.path })
+    end
+end
+
+vim.api.nvim_create_autocmd('PackChanged', { callback = hooks })
 
 vim.pack.add(packages)
 
@@ -132,7 +149,12 @@ vim.defer_fn(function()
     })
 
     require("gitblame").setup({})
+    require("marks").setup({})
 end, 50)
+
+require("telescope").setup({})
+require('telescope').load_extension('fzf')
+require("mini.pick").setup({})
 
 
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -145,7 +167,8 @@ map('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff' })
 map('n', '<leader>gc', ':DiffviewClose<CR>', { desc = '[G]it Diffview [C]lose' })
 
 map('n', '<leader>gf', function() require("telescope.builtin").git_files() end, { desc = 'Search [G]it [F]iles' })
-map('n', '<leader>ff', function() require("telescope.builtin").find_files() end, { desc = '[F]ind [F]iles' })
+-- map('n', '<leader>ff', function() require("telescope.builtin").find_files() end, { desc = '[F]ind [F]iles' })
+map('n', '<leader>ff', ":Pick files tool='git'<CR>", { desc = '[F]ind [F]iles', silent = true })
 map('n', '<leader>fh', function() require("telescope.builtin").help_tags() end, { desc = '[F]ind [H]elp' })
 map('n', '<leader>fw', function() require("telescope.builtin").grep_string() end, { desc = '[F]ind current [W]ord' })
 map('n', '<leader>fg', function() require("telescope.builtin").live_grep() end, { desc = '[F]ind by [G]rep' })
@@ -163,6 +186,14 @@ map('n', '<leader>ft', function() require("telescope.builtin").lsp_type_definiti
 map('n', '<leader>lt', function() vim.diagnostic.config({ virtual_text = true, virtual_lines = false }) end)
 map('n', '<leader>ly', function() vim.diagnostic.config({ virtual_text = false, virtual_lines = true }) end)
 map('n', '<leader>li', ':checkhealth vim.lsp<CR>', { silent = true })
+
+vim.keymap.set("n", "]d", function()
+    vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR })
+end)
+
+vim.keymap.set("n", "[d", function()
+    vim.diagnostic.jump({ count = -1, severity = vim.diagnostic.severity.ERROR })
+end)
 
 -- Create a custom namespace. This will aggregate signs from all other
 -- namespaces and only show the one with the highest severity on a
@@ -221,6 +252,9 @@ vim.api.nvim_create_autocmd("FileType", {
     once = true,
     callback = function()
         require("mason").setup()
+        require("luau-lsp").setup({
+            sourcemap = { enabled = false }
+        })
 
         local cmp = require('cmp')
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -257,6 +291,14 @@ vim.api.nvim_create_autocmd("FileType", {
             cmd = { 'rust-analyzer' },
             settings = { ['rust-analyzer'] = { checkOnSave = true, check = { command = "clippy" } } }
         })
+
+        lsp.config('clangd', {
+            cmd = {
+                "clangd",
+                "--header-insertion=iwyu",        -- Only insert if it's actually missing
+                "--include-cleaner-stdlib=false", -- Don't be pedantic about stdlib headers
+            },
+        })
     end
 })
 
@@ -286,6 +328,7 @@ map("n", "<leader>sj", function() harpoon:list():select(3) end, { desc = "Harpoo
 map("n", "<leader>sn", function() harpoon:list():select(4) end, { desc = "Harpoon File 4" })
 map("n", "<leader>sm", function() harpoon:list():select(5) end, { desc = "Harpoon File 5" })
 map("n", "<leader>si", function() harpoon:list():select(6) end, { desc = "Harpoon File 6" })
+map("n", "<leader>sy", function() harpoon:list():select(7) end, { desc = "Harpoon File 7" })
 
 -- Toggle previous & next buffers stored within Harpoon list
 map("n", "<leader>s[", function() harpoon:list():prev() end, { desc = "Harpoon Previous Buffer" })
