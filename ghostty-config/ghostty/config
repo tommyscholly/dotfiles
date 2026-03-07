@@ -11,4 +11,4 @@ font-family = "Mononoki Nerd Font"
 font-size = 16
 
 # need to figure out how to toggle this depending on if im in hyprland or not
-window-decoration = false
+# window-decoration = false
