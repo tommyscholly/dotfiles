@@ -23,6 +23,9 @@ vim.g.loaded_ruby_provider = 0
 vim.g.loaded_perl_provider = 0
 vim.g.loaded_node_provider = 0
 
+-- vim.o.list = true
+-- vim.o.listchars = 'tab:» ,lead:•,trail:•'
+
 vim.defer_fn(function()
     if vim.fn.has('clipboard') == 1 then
         vim.opt.clipboard = 'unnamedplus'
@@ -31,7 +34,8 @@ end, 100)
 
 local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter",         version = "main" },
-    { src = "https://github.com/AlessandroYorba/Alduin" },
+    -- { src = "https://github.com/AlessandroYorba/Alduin" },
+    {src = "https://github.com/p00f/alabaster.nvim"},
 
     { src = "https://github.com/zenbones-theme/zenbones.nvim" },
 
@@ -81,6 +85,8 @@ local packages = {
 
     { src = "https://github.com/chentoast/marks.nvim" },
 
+    { src = "https://github.com/pwntester/octo.nvim" },
+
     -- { src = "https://github.com/ThePrimeagen/99" },
 }
 
@@ -126,7 +132,8 @@ end, { desc = "Clear unused packages" })
 
 
 
-vim.cmd.colorscheme("Alduin")
+-- vim.cmd.colorscheme("Alduin")
+vim.cmd.colorscheme("alabaster")
 
 vim.wo.foldmethod = 'expr'
 vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
@@ -150,6 +157,7 @@ vim.defer_fn(function()
 
     require("gitblame").setup({})
     require("marks").setup({})
+    require("octo").setup({})
 end, 50)
 
 require("telescope").setup({})

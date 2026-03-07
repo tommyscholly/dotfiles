@@ -1,4 +1,5 @@
-theme = espresso
+# theme = espresso
+theme = alabaster
 
 cursor-style = block
 cursor-style-blink = false
@@ -7,6 +8,7 @@ shell-integration = detect
 
 keybind = global:unconsumed:ctrl+shift+r=reload_config
 font-family = "Mononoki Nerd Font"
+font-size = 16
 
 # need to figure out how to toggle this depending on if im in hyprland or not
 window-decoration = false
