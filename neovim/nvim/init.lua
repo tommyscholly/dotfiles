@@ -168,6 +168,9 @@ require("mini.pick").setup({})
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
 local map = vim.keymap.set
+map('n', 'J', '<C-d>zz')
+map('n', 'K', '<C-u>zz')
+
 map('n', '<leader>o', ':update<CR> :source<CR>')
 map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugins' })
 
