@@ -35,7 +35,7 @@ end, 100)
 local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter",         version = "main" },
     -- { src = "https://github.com/AlessandroYorba/Alduin" },
-    {src = "https://github.com/p00f/alabaster.nvim"},
+    { src = "https://github.com/p00f/alabaster.nvim" },
 
     { src = "https://github.com/zenbones-theme/zenbones.nvim" },
 
@@ -79,7 +79,7 @@ local packages = {
     { src = "https://codeberg.org/andyg/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
-    { src = "https://github.com/lopi-py/luau-lsp.nvim" },
+    -- { src = "https://github.com/lopi-py/luau-lsp.nvim" },
 
     { src = "https://github.com/sindrets/diffview.nvim" },
 
@@ -130,6 +130,21 @@ vim.api.nvim_create_user_command("PackCleanup", function()
     end
 end, { desc = "Clear unused packages" })
 
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "luau",
+    callback = function()
+        vim.opt_local.expandtab = true
+        vim.opt_local.shiftwidth = 4
+        vim.opt_local.tabstop = 4
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "md",
+    callback = function()
+        vim.opt_local.wrap = true
+    end,
+})
 
 
 -- vim.cmd.colorscheme("Alduin")
@@ -168,8 +183,8 @@ require("mini.pick").setup({})
 vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
 
 local map = vim.keymap.set
-map('n', 'J', '<C-d>zz')
-map('n', 'K', '<C-u>zz')
+map('n', '<C->d', '<C->dzz')
+map('n', '<C->u', '<C->uzz')
 
 map('n', '<leader>o', ':update<CR> :source<CR>')
 map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugins' })
@@ -197,6 +212,7 @@ map('n', '<leader>ft', function() require("telescope.builtin").lsp_type_definiti
 map('n', '<leader>lt', function() vim.diagnostic.config({ virtual_text = true, virtual_lines = false }) end)
 map('n', '<leader>ly', function() vim.diagnostic.config({ virtual_text = false, virtual_lines = true }) end)
 map('n', '<leader>li', ':checkhealth vim.lsp<CR>', { silent = true })
+map('n', '<leader>la', function() vim.lsp.buf.code_action() end, { silent = true })
 
 vim.keymap.set("n", "]d", function()
     vim.diagnostic.jump({ count = 1, severity = vim.diagnostic.severity.ERROR })
@@ -258,59 +274,48 @@ vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "rust", "lua", "luau", "python", "cpp", "c", "typst" },
-    once = true,
-    callback = function()
-        require("mason").setup()
-        require("luau-lsp").setup({
-            sourcemap = { enabled = false }
-        })
+require("mason").setup()
 
-        local cmp = require('cmp')
-        local cmp_select = { behavior = cmp.SelectBehavior.Select }
-        local cmp_mappings = cmp.mapping.preset.insert({
-            ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
-            ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
-            ['<C-l>'] = cmp.mapping.confirm({ select = true }),
-            ["<C-Space>"] = cmp.mapping.complete(),
-        })
+local cmp = require('cmp')
+local cmp_select = { behavior = cmp.SelectBehavior.Select }
+local cmp_mappings = cmp.mapping.preset.insert({
+    ['<C-k>'] = cmp.mapping.select_prev_item(cmp_select),
+    ['<C-j>'] = cmp.mapping.select_next_item(cmp_select),
+    ['<C-l>'] = cmp.mapping.confirm({ select = true }),
+    ["<C-Space>"] = cmp.mapping.complete(),
+})
 
-        cmp_mappings['<Tab>'] = nil
-        cmp_mappings['<S-Tab>'] = nil
-        cmp.setup {
-            mapping = cmp_mappings,
-            snippet = {
-                expand = function(args)
-                    require 'luasnip'.lsp_expand(args.body)
-                end
-            },
+cmp_mappings['<Tab>'] = nil
+cmp_mappings['<S-Tab>'] = nil
+cmp.setup {
+    mapping = cmp_mappings,
+    snippet = {
+        expand = function(args)
+            require 'luasnip'.lsp_expand(args.body)
+        end
+    },
 
-            sources = {
-                { name = 'nvim_lsp' },
-            },
-        }
+    sources = {
+        { name = 'nvim_lsp' },
+    },
+}
 
-        -- Enable LSPs
-        local lsp = vim.lsp
-        lsp.enable({ "lua_ls", "clangd", "pyright", "rust_analyzer" })
+-- Enable LSPs
+local lsp = vim.lsp
+lsp.enable({ "lua_ls", "clangd", "pyright", "rust_analyzer" })
 
-        -- require("luau-lsp").setup({})
+-- Config specific LSPs
+lsp.config('rust_analyzer', {
+    cmd = { 'rust-analyzer' },
+    settings = { ['rust-analyzer'] = { checkOnSave = true, check = { command = "clippy" } } }
+})
 
-        -- Config specific LSPs
-        lsp.config('rust_analyzer', {
-            cmd = { 'rust-analyzer' },
-            settings = { ['rust-analyzer'] = { checkOnSave = true, check = { command = "clippy" } } }
-        })
-
-        lsp.config('clangd', {
-            cmd = {
-                "clangd",
-                "--header-insertion=iwyu",        -- Only insert if it's actually missing
-                "--include-cleaner-stdlib=false", -- Don't be pedantic about stdlib headers
-            },
-        })
-    end
+lsp.config('clangd', {
+    cmd = {
+        "clangd",
+        "--header-insertion=iwyu",        -- Only insert if it's actually missing
+        "--include-cleaner-stdlib=false", -- Don't be pedantic about stdlib headers
+    },
 })
 
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })

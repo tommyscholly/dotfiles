@@ -1,11 +1,7 @@
 {
   "plugins": {
-    "Alduin": {
-      "rev": "6575a0f167fef521c404681b96caebdb2b9cc4cd",
-      "src": "https://github.com/AlessandroYorba/Alduin"
-    },
     "LuaSnip": {
-      "rev": "dae4f5aaa3574bd0c2b9dd20fb9542a02c10471c",
+      "rev": "642b0c595e11608b4c18219e93b88d7637af27bc",
       "src": "https://github.com/L3MON4D3/LuaSnip"
     },
     "alabaster.nvim": {
@@ -28,12 +24,8 @@
       "rev": "5c536e2d4134d064aa3f41575280bc8a2a0e03d7",
       "src": "https://github.com/f-person/git-blame.nvim"
     },
-    "git-worktree.nvim": {
-      "rev": "f247308e68dab9f1133759b05d944569ad054546",
-      "src": "https://github.com/ThePrimeagen/git-worktree.nvim"
-    },
     "gitsigns.nvim": {
-      "rev": "9f3c6dd7868bcc116e9c1c1929ce063b978fa519",
+      "rev": "7c4faa3540d0781a28588cafbd4dd187a28ac6e3",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
     "harpoon": {
@@ -42,16 +34,12 @@
       "version": "'harpoon2'"
     },
     "leap.nvim": {
-      "rev": "b81866399072af08195ebfbcfea9d3dcab970972",
+      "rev": "71a974fb397904ad1adc69817766197df52ffe0e",
       "src": "https://codeberg.org/andyg/leap.nvim"
     },
     "lualine.nvim": {
       "rev": "47f91c416daef12db467145e16bed5bbfe00add8",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
-    },
-    "luau-lsp.nvim": {
-      "rev": "97c4f400bbdd3b70016b06d99b585be310ae5864",
-      "src": "https://github.com/lopi-py/luau-lsp.nvim"
     },
     "lush.nvim": {
       "rev": "9c60ec2279d62487d942ce095e49006af28eed6e",
@@ -66,7 +54,7 @@
       "src": "https://github.com/mason-org/mason.nvim"
     },
     "mini.pick": {
-      "rev": "8521fe21df86e08d9e4b3c3f3a7d50e47954e1af",
+      "rev": "fe079c2bd894a5ee70b62f23d819620ef40c4949",
       "src": "https://github.com/nvim-mini/mini.pick"
     },
     "nvim-autopairs": {
@@ -78,20 +66,20 @@
       "src": "https://github.com/hrsh7th/nvim-cmp"
     },
     "nvim-lspconfig": {
-      "rev": "f386df19b145607a33885b6110ef5c04faae42cb",
+      "rev": "841c6d4139aedb8a3f2baf30cef5327371385b93",
       "src": "https://github.com/neovim/nvim-lspconfig"
     },
     "nvim-treesitter": {
-      "rev": "957f86ae3f049ab6681ed64c05b05768fcaed0d2",
+      "rev": "6620ae1c44dfa8623b22d0cbf873a9e8d073b849",
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
     "nvim-web-devicons": {
-      "rev": "737cf6c657898d0c697311d79d361288a1343d50",
+      "rev": "d7462543c9e366c0d196c7f67a945eaaf5d99414",
       "src": "https://github.com/nvim-tree/nvim-web-devicons"
     },
     "octo.nvim": {
-      "rev": "5ae580df72589f25b775ff2bdacfd7f7be8d63bd",
+      "rev": "42e547c08433c22c8311d7848998d2d08bfaf77e",
       "src": "https://github.com/pwntester/octo.nvim"
     },
     "other.nvim": {
@@ -111,7 +99,7 @@
       "src": "https://github.com/nvim-telescope/telescope.nvim"
     },
     "vim-fugitive": {
-      "rev": "61b51c09b7c9ce04e821f6cf76ea4f6f903e3cf4",
+      "rev": "3b753cf8c6a4dcde6edee8827d464ba9b8c4a6f0",
       "src": "https://github.com/tpope/vim-fugitive"
     },
     "vim-repeat": {
