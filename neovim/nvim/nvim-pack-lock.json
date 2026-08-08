@@ -1,5 +1,9 @@
 {
   "plugins": {
+    "Alduin": {
+      "rev": "6575a0f167fef521c404681b96caebdb2b9cc4cd",
+      "src": "https://github.com/AlessandroYorba/Alduin"
+    },
     "LuaSnip": {
       "rev": "642b0c595e11608b4c18219e93b88d7637af27bc",
       "src": "https://github.com/L3MON4D3/LuaSnip"
@@ -105,10 +109,6 @@
     "vim-repeat": {
       "rev": "65846025c15494983dafe5e3b46c8f88ab2e9635",
       "src": "https://github.com/tpope/vim-repeat"
-    },
-    "vim-sleuth": {
-      "rev": "be69bff86754b1aa5adcbb527d7fcd1635a84080",
-      "src": "https://github.com/tpope/vim-sleuth"
     },
     "zenbones.nvim": {
       "rev": "22b7fb75593412e0dc81b4bdefae718e9e84aa82",

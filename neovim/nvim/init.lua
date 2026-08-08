@@ -5,6 +5,7 @@ vim.g.maplocalleader = " "
 
 vim.opt.expandtab = true
 vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
 vim.opt.wrap = false
 vim.opt.hlsearch = false
 vim.opt.textwidth = 0
@@ -34,7 +35,7 @@ end, 100)
 
 local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter",         version = "main" },
-    -- { src = "https://github.com/AlessandroYorba/Alduin" },
+    { src = "https://github.com/AlessandroYorba/Alduin" },
     { src = "https://github.com/p00f/alabaster.nvim" },
 
     { src = "https://github.com/zenbones-theme/zenbones.nvim" },
@@ -70,9 +71,6 @@ local packages = {
     { src = "https://github.com/nvim-lualine/lualine.nvim" },
     { src = "https://github.com/f-person/git-blame.nvim" },
 
-    -- detect tab stop
-    { src = "https://github.com/tpope/vim-sleuth" },
-
     -- switch between file pairs
     { src = "https://github.com/rgroli/other.nvim" },
 
@@ -86,6 +84,10 @@ local packages = {
     { src = "https://github.com/chentoast/marks.nvim" },
 
     { src = "https://github.com/pwntester/octo.nvim" },
+
+    -- { src = "https://github.com/supermaven-inc/supermaven-nvim" }
+
+    -- { src = "https://github.com/cursortab/cursortab.nvim" },
 
     -- { src = "https://github.com/ThePrimeagen/99" },
 }
@@ -140,6 +142,16 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 vim.api.nvim_create_autocmd("FileType", {
+    pattern = "odin",
+    callback = function()
+        vim.opt_local.expandtab = true
+        vim.opt_local.shiftwidth = 4
+        vim.opt_local.tabstop = 4
+        vim.opt_local.smartindent = false
+    end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
     pattern = "md",
     callback = function()
         vim.opt_local.wrap = true
@@ -189,11 +201,12 @@ map('n', '<C->u', '<C->uzz')
 map('n', '<leader>o', ':update<CR> :source<CR>')
 map('n', '<leader>pu', function() vim.pack.update() end, { desc = 'Update Plugins' })
 
-map('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff' })
-map('n', '<leader>gc', ':DiffviewClose<CR>', { desc = '[G]it Diffview [C]lose' })
+-- map('n', '<leader>gd', ':DiffviewOpen<CR>', { desc = '[G]it [D]iff' })
+-- map('n', '<leader>gc', ':DiffviewClose<CR>', { desc = '[G]it Diffview [C]lose' })
 
 map('n', '<leader>gf', function() require("telescope.builtin").git_files() end, { desc = 'Search [G]it [F]iles' })
--- map('n', '<leader>ff', function() require("telescope.builtin").find_files() end, { desc = '[F]ind [F]iles' })
+-- note that telescope finding files is much slower than minipick
+map('n', '<leader>tf', function() require("telescope.builtin").find_files() end, { desc = '[F]ind [F]iles' })
 map('n', '<leader>ff', ":Pick files tool='git'<CR>", { desc = '[F]ind [F]iles', silent = true })
 map('n', '<leader>fh', function() require("telescope.builtin").help_tags() end, { desc = '[F]ind [H]elp' })
 map('n', '<leader>fw', function() require("telescope.builtin").grep_string() end, { desc = '[F]ind current [W]ord' })
@@ -272,6 +285,7 @@ map('n', '<leader>lf', vim.lsp.buf.format)
 local opts = { noremap = true, silent = true }
 vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
 vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
 -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 require("mason").setup()
@@ -302,7 +316,7 @@ cmp.setup {
 
 -- Enable LSPs
 local lsp = vim.lsp
-lsp.enable({ "lua_ls", "clangd", "pyright", "rust_analyzer" })
+lsp.enable({ "lua_ls", "clangd", "pyright", "rust_analyzer", "ols" })
 
 -- Config specific LSPs
 lsp.config('rust_analyzer', {
@@ -420,5 +434,16 @@ map("n", "<leader>ll", "<cmd>:Other<CR>", { noremap = true, silent = true })
 
 vim.keymap.set({ 'n', 'x', 'o' }, 's', '<Plug>(leap)')
 vim.keymap.set('n', 'S', '<Plug>(leap-from-window)')
+
+-- vim.defer_fn(function()
+--     require("cursortab").setup({
+--         provider = {
+--             type = "zeta-2",
+--             url = "http://localhost:8000",
+--         },
+--     })
+-- end, 100)
+
+-- require("supermaven-nvim").setup({})
 
 -- require("llms.99")()
