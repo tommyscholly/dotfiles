@@ -16,6 +16,10 @@
       "rev": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90",
       "src": "https://github.com/saadparwaiz1/cmp_luasnip"
     },
+    "cursortab.nvim": {
+      "rev": "0e6e1268550395eeeb4750e76d393f1e3591bd05",
+      "src": "https://github.com/leonardcser/cursortab.nvim"
+    },
     "diffview.nvim": {
       "rev": "4516612fe98ff56ae0415a259ff6361a89419b0a",
       "src": "https://github.com/sindrets/diffview.nvim"

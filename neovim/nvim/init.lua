@@ -29,10 +29,10 @@ local packages = {
     { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" },
     { src = "https://github.com/AlessandroYorba/Alduin" },
 
-    { src = "https://github.com/zenbones-theme/zenbones.nvim"},
+    { src = "https://github.com/zenbones-theme/zenbones.nvim" },
 
     -- zenbones dep
-    { src = "https://github.com/rktjmp/lush.nvim"},
+    { src = "https://github.com/rktjmp/lush.nvim" },
 
     { src = "https://github.com/nvim-lua/plenary.nvim" },
     { src = "https://github.com/nvim-tree/nvim-web-devicons" },
@@ -67,16 +67,12 @@ local packages = {
     -- switch between file pairs
     { src = "https://github.com/rgroli/other.nvim" },
 
-    { src = "https://github.com/supermaven-inc/supermaven-nvim" },
-
     { src = "https://github.com/ggandor/leap.nvim" },
     -- leap dependency
     { src = "https://github.com/tpope/vim-repeat" },
     { src = "https://github.com/lopi-py/luau-lsp.nvim" },
 
     { src = "https://github.com/sindrets/diffview.nvim" },
-
-    -- { src = "https://github.com/ThePrimeagen/99" },
 }
 
 vim.pack.add(packages)
@@ -107,8 +103,6 @@ vim.api.nvim_create_user_command("PackCleanup", function()
     end
 end, { desc = "Clear unused packages" })
 
-
-
 vim.cmd.colorscheme("alduin")
 
 vim.wo.foldmethod = 'expr'
@@ -122,7 +116,7 @@ vim.defer_fn(function()
             lualine_c = { function()
                 local f = vim.fn.expand('%:p')
                 return vim.fn.fnamemodify(f, ':h:h:t') ..
-                '/' .. vim.fn.fnamemodify(f, ':h:t') .. '/' .. vim.fn.expand('%:t')
+                    '/' .. vim.fn.fnamemodify(f, ':h:t') .. '/' .. vim.fn.expand('%:t')
             end }
         }
     })
@@ -130,8 +124,6 @@ vim.defer_fn(function()
     require("gitsigns").setup({
         signs = { add = { text = '+' }, change = { text = '~' }, delete = { text = '_' } }
     })
-
-    require("supermaven-nvim").setup({})
 end, 50)
 
 
@@ -217,7 +209,7 @@ vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
 -- vim.cmd [[autocmd BufWritePre * lua vim.lsp.buf.format()]]
 
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "rust", "lua", "python", "cpp", "c", "typst" },
+    pattern = { "rust", "lua", "python", "cpp", "c", "cc", "typst" },
     once = true,
     callback = function()
         require("mason").setup()
